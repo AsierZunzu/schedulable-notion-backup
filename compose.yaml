@@ -5,4 +5,4 @@ services:
     env_file: ".env"
     restart: unless-stopped
     volumes:
-      - '${BACKUP_PATH}:/downloads'
+      - '${BACKUP_PATH}:/${DOWNLOADS_DIRECTORY_PATH}'
