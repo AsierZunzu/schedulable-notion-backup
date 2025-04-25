@@ -13,5 +13,5 @@ Follow the instructions at [README -> Set Credentials](https://github.com/jcklei
 ## Run the service
 Just start the service with docker compose and you are good to go:
 ```
-docker compose up --detach
+docker compose up -d
 ```
