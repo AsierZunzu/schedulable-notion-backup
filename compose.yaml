@@ -1,0 +1,8 @@
+services:
+  notion-backup:
+    container_name: notion-backup
+    build: .
+    env_file: ".env"
+    restart: unless-stopped
+    volumes:
+      - '${BACKUP_PATH}:/downloads'
