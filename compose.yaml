@@ -1,7 +1,7 @@
 services:
   notion-backup:
     container_name: notion-backup
-    build: .
+    image: ghcr.io/asierzunzu/schedulable-notion-backup:main
     env_file: ".env"
     restart: unless-stopped
     volumes:
