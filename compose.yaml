@@ -1,8 +1,10 @@
+name: notion-backup
 services:
   notion-backup:
-    container_name: notion-backup
     image: ghcr.io/asierzunzu/schedulable-notion-backup:main
+    container_name: notion-backup
+    volumes:
+      - ${BACKUP_PATH}:/${DOWNLOADS_DIRECTORY_PATH}
     env_file: ".env"
     restart: unless-stopped
-    volumes:
-      - '${BACKUP_PATH}:/${DOWNLOADS_DIRECTORY_PATH}'
+    user: "${PUID-1000}:${PGID-1000}"
