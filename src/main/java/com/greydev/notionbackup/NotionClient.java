@@ -161,7 +161,26 @@ public class NotionClient {
 
 		try {
 			log.info("Downloading file to: '{}'", downloadPath);
-			client.send(request, HttpResponse.BodyHandlers.ofFile(downloadPath));
+			HttpResponse<InputStream> response = client.send(request, HttpResponse.BodyHandlers.ofInputStream());
+
+			var statusCode = response.statusCode();
+			if (statusCode != HttpURLConnection.HTTP_OK) {
+				log.error("The file download responded with status code {}", statusCode);
+				return Optional.empty();
+			}
+
+			File targetFile = new File(downloadPath.toString());
+			OutputStream outStream = new FileOutputStream(targetFile);
+
+			byte[] buffer = new byte[8 * 1024];
+			int bytesRead;
+			InputStream body = response.body();
+			while (true) {
+				if ((bytesRead = body.read(buffer)) == -1) break;
+				outStream.write(buffer, 0, bytesRead);
+			}
+			body.close();
+
 			return Optional.of(downloadPath.toFile());
 		} catch (IOException | InterruptedException e) {
 			log.warn("Exception during file download", e);
