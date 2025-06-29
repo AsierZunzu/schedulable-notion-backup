@@ -1,12 +1,18 @@
+FROM maven:3.8.6-openjdk-11-slim AS build
+
+COPY ./ /usr/src/mymaven
+WORKDIR /usr/src/mymaven
+
+RUN mvn clean install
+
 FROM openjdk:11
-ARG PATH_TO_JAR
 
 WORKDIR /
 
 RUN mkdir /downloads
 RUN chmod 755 /downloads
 
-ADD ${PATH_TO_JAR} /notion-backup.jar
+COPY --from=build /usr/src/mymaven/target/notion-backup-1.0-SNAPSHOT.jar /notion-backup.jar
 
 RUN apt-get update && apt-get install -y cron --no-install-recommends && rm -rf /var/cache/apt/archives /var/lib/apt/lists/*.
 RUN touch /etc/cron.d/simple-cron \
