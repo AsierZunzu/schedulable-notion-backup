@@ -338,7 +338,7 @@ public class NotionClient {
 
 	private void sleep(int seconds) {
 		try {
-			Thread.sleep(seconds * 1000);
+			Thread.sleep(seconds * 1000L);
 		} catch (InterruptedException e) {
 			log.error("An exception occurred: ", e);
 			Thread.currentThread().interrupt();
