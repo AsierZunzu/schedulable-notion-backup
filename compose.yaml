@@ -7,7 +7,7 @@ services:
       - ${BACKUP_PATH}:/${DOWNLOADS_DIRECTORY_PATH}
     env_file: ".env"
     restart: unless-stopped
-    user: "${PUID-1000}:${PGID-1000}"
+#    user: "${PUID-1000}:${PGID-1000}"
     labels:
       # Watchtower
       com.centurylinklabs.watchtower.enable: true
