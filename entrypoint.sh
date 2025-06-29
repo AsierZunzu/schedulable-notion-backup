@@ -8,6 +8,7 @@ if ! echo "$crontabContent" | crontab > /dev/null 2>&1; then
     exit 1
 fi
 echo "Scheduling backup with cron syntax '$SCHEDULING_CONFIG'"
+echo "Using timezone '$TZ'"
 echo "$crontabContent"  >> /etc/cron.d/simple-cron
 cron
 tail -f /var/log/cron.log
