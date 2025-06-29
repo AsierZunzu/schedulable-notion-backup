@@ -1,7 +1,10 @@
 package com.greydev.notionbackup;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
+import java.net.CookieManager;
+import java.net.CookiePolicy;
+import java.net.CookieStore;
+import java.net.HttpCookie;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -10,6 +13,7 @@ import java.net.http.HttpResponse;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
@@ -37,7 +41,6 @@ public class NotionClient {
 	private static final String KEY_DOWNLOADS_DIRECTORY_PATH = "DOWNLOADS_DIRECTORY_PATH";
 	private static final String KEY_NOTION_SPACE_ID = "NOTION_SPACE_ID";
 	private static final String KEY_NOTION_TOKEN_V2 = "NOTION_TOKEN_V2";
-	private static final String KEY_NOTION_FILE_TOKEN = "NOTION_FILE_TOKEN";
 	private static final String KEY_NOTION_EXPORT_TYPE = "NOTION_EXPORT_TYPE";
 	private static final String KEY_NOTION_FLATTEN_EXPORT_FILETREE = "NOTION_FLATTEN_EXPORT_FILETREE";
 	private static final String KEY_NOTION_EXPORT_COMMENTS = "NOTION_EXPORT_COMMENTS";
@@ -48,23 +51,25 @@ public class NotionClient {
 
 	private final String notionSpaceId;
 	private final String notionTokenV2;
-	private final String notionFileToken;
 	private final String exportType;
 	private final boolean flattenExportFileTree;
 	private final boolean exportComments;
+	private String notionFileToken;
 	private String downloadsDirectoryPath;
 
+	private final CookieManager cookieManager ;
 	private final HttpClient client;
 	private final ObjectMapper objectMapper = new ObjectMapper();
 
 
 	NotionClient(Dotenv dotenv) {
-		this.client = HttpClient.newBuilder().build();
+		this.cookieManager = new CookieManager();
+		this.cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
+		this.client = HttpClient.newBuilder().cookieHandler(this.cookieManager).build();
 
 		// both environment variables and variables defined in the .env file can be accessed this way
 		notionSpaceId = dotenv.get(KEY_NOTION_SPACE_ID);
 		notionTokenV2 = dotenv.get(KEY_NOTION_TOKEN_V2);
-		notionFileToken = dotenv.get(KEY_NOTION_FILE_TOKEN);
 		downloadsDirectoryPath = dotenv.get(KEY_DOWNLOADS_DIRECTORY_PATH);
 
 		if (StringUtils.isBlank(downloadsDirectoryPath)) {
@@ -259,6 +264,15 @@ public class NotionClient {
 					log.info("The download URL is not yet present. Trying again in {} seconds...", FETCH_DOWNLOAD_URL_RETRY_SECONDS);
 					continue;
 				}
+				CookieStore cookieStore = cookieManager.getCookieStore();
+				List<HttpCookie> cookies = cookieStore.getCookies();
+				notionFileToken = cookies
+						.stream()
+						.filter(cookie -> FILE_TOKEN.equals(cookie.getName()))
+						.findFirst()
+						.orElseThrow(IllegalStateException::new)
+						.getValue();
+				log.info("Notion file token {}", notionFileToken);
 				return Optional.of(exportActivity.textValue());
 			}
 		}
