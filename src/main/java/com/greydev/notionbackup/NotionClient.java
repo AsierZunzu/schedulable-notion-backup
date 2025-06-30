@@ -16,6 +16,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -161,15 +162,15 @@ public class NotionClient {
 
 		try {
 			log.info("Downloading file to: '{}'", downloadPath);
-			HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+			HttpResponse<InputStream> response = client.send(request, HttpResponse.BodyHandlers.ofInputStream());
 
 			var statusCode = response.statusCode();
 			if (statusCode != HttpURLConnection.HTTP_OK) {
 				log.error("The file download responded with status code {}", statusCode);
 				return Optional.empty();
 			}
-			FileWriter myWriter = new FileWriter(downloadPath.toString());
-			myWriter.write(response.body());
+			File file = new File(downloadPath.toString());
+			FileUtils.copyInputStreamToFile(response.body(), file);
 
 			return Optional.of(downloadPath.toFile());
 		} catch (IOException | InterruptedException e) {
@@ -177,7 +178,6 @@ public class NotionClient {
 			return Optional.empty();
 		}
 	}
-
 
 	private Optional<String> triggerExportTask() throws IOException, InterruptedException {
 		for (int i = 0; i < 500; i++, sleep(TRIGGER_EXPORT_TASK_RETRY_SECONDS)) {
