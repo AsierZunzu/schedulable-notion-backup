@@ -2,7 +2,6 @@ package com.greydev.notionbackup;
 
 import java.io.File;
 import java.io.IOException;
-import java.rmi.UnexpectedException;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -118,7 +117,6 @@ public class NotionBackup {
 		}
 	}
 
-
 	public static void startGoogleDriveBackup(File fileToUpload) {
 		Optional<String> serviceAccountSecretOptional = extractGoogleServiceAccountSecret();
 		if (serviceAccountSecretOptional.isEmpty()) {
@@ -142,7 +140,6 @@ public class NotionBackup {
 			throw new IllegalStateException("Backup was not successful");
 		}
 	}
-
 
 	public static void startDropboxBackup(File fileToUpload) {
 		Optional<String> dropboxAccessToken = getDropboxAccessToken();
@@ -193,7 +190,6 @@ public class NotionBackup {
 
 		return Optional.of(dropboxAccessToken);
 	}
-
 
 	public static void startNextcloudBackup(File fileToUpload) {
 		String email = dotenv.get(KEY_NEXTCLOUD_EMAIL);
@@ -261,7 +257,6 @@ public class NotionBackup {
 		return Optional.empty();
 	}
 
-
 	private static Optional<String> readFileContentAsString(String filePath) {
 		String fileContent = null;
 		try {
@@ -277,7 +272,6 @@ public class NotionBackup {
 		return Optional.of(fileContent);
 	}
 
-
 	private static Dotenv initDotenv() {
 		Dotenv dotenv = Dotenv.configure()
 				.ignoreIfMissing()
@@ -288,5 +282,4 @@ public class NotionBackup {
 		}
 		return dotenv;
 	}
-
 }

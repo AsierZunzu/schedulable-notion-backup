@@ -55,12 +55,11 @@ public class NotionClient {
 	private final String exportType;
 	private final boolean flattenExportFileTree;
 	private final boolean exportComments;
-	private String notionFileToken;
-	private String downloadsDirectoryPath;
-
-	private final CookieManager cookieManager ;
+	private final CookieManager cookieManager;
 	private final HttpClient client;
 	private final ObjectMapper objectMapper = new ObjectMapper();
+	private String notionFileToken;
+	private String downloadsDirectoryPath;
 
 
 	NotionClient(Dotenv dotenv) {
@@ -104,7 +103,6 @@ public class NotionClient {
 			exit(KEY_NOTION_TOKEN_V2 + " is missing!");
 		}
 	}
-
 
 	public Optional<File> export() {
 		try {
@@ -325,7 +323,6 @@ public class NotionClient {
 		System.exit(1);
 	}
 
-
 	private void sleep(int seconds) {
 		try {
 			Thread.sleep(seconds * 1000L);
@@ -334,5 +331,4 @@ public class NotionClient {
 			Thread.currentThread().interrupt();
 		}
 	}
-
 }
