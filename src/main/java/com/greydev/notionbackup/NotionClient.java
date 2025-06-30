@@ -133,8 +133,8 @@ public class NotionClient {
 					LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss")),
 					EXPORT_FILE_EXTENSION);
 
-			log.info("Downloaded export will be saved to: " + downloadsDirectoryPath);
-			log.info("fileName: " + fileName);
+            log.info("Downloaded export will be saved to: {}", downloadsDirectoryPath);
+            log.info("fileName: {}", fileName);
 			Path downloadPath = Path.of(downloadsDirectoryPath, fileName);
 			Optional<File> downloadedFile = downloadToFile(downloadLink.get(), downloadPath);
 
