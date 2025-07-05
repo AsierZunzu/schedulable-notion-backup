@@ -1,6 +1,7 @@
 FROM maven:3.8.6-openjdk-11-slim AS build
 
-COPY ./ /usr/src/mymaven
+COPY ./pom.xml /usr/src/mymaven/pom.xml
+COPY ./src /usr/src/mymaven/src
 WORKDIR /usr/src/mymaven
 
 RUN mvn clean install
