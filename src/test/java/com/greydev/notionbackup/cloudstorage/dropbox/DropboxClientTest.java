@@ -169,4 +169,40 @@ public class DropboxClientTest {
 		assertFalse(result);
 	}
 
+
+	@Test
+	public void testDoesFileExist_givenMatchingNameWithDifferentCase_returnsTrue() throws DbxException {
+		// given
+		DropboxClient testee = new DropboxClient(dropboxService);
+
+		Metadata m1 = new Metadata("TESTFILETOUPLOAD.TXT");
+		List<Metadata> metadataList = List.of(m1);
+		ListFolderResult listFolderResult = new ListFolderResult(metadataList, "1", true);
+		when(dropboxService.files().listFolder(anyString())).thenReturn(listFolderResult);
+		clearInvocations(dropboxService);
+
+		// when
+		boolean result = testee.doesFileExist("testFileToUpload.txt");
+
+		// then
+		assertTrue(result);
+	}
+
+
+	@Test
+	public void testUpload_failureBecauseIOExceptionDuringUpload() throws DbxException, IOException {
+		// given
+		DropboxClient testee = spy(new DropboxClient(dropboxService));
+
+		File testFileToUpload = new File("src/test/resources/testFileToUpload.txt");
+		when(dropboxService.files().uploadBuilder(anyString()).uploadAndFinish(any())).thenThrow(IOException.class);
+
+		// when
+		boolean result = testee.upload(testFileToUpload);
+
+		// then
+		verify(testee, never()).doesFileExist(anyString());
+		assertFalse(result);
+	}
+
 }
