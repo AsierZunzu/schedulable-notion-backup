@@ -1,7 +1,9 @@
 package com.greydev.notionbackup.cloudstorage.pcloud;
 
 import com.greydev.notionbackup.cloudstorage.CloudStorageClient;
-import com.pcloud.sdk.*;
+import com.pcloud.sdk.ApiClient;
+import com.pcloud.sdk.ApiError;
+import com.pcloud.sdk.DataSource;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;

@@ -50,16 +50,16 @@ public class NotionBackup {
 	private static final String KEY_PCLOUD_API_HOST = "PCLOUD_API_HOST";
 	private static final String KEY_PCLOUD_FOLDER_ID = "PCLOUD_FOLDER_ID";
 
-	private static final Dotenv dotenv;
+	private static final Dotenv DOTENV;
 
 	static {
-		dotenv = initDotenv();
+		DOTENV = initDotenv();
 	}
 
 	public static void main(String[] args) {
 		log.info("---------------- Starting Notion Backup ----------------");
 
-		NotionClient notionClient = new NotionClient(dotenv);
+		NotionClient notionClient = new NotionClient(DOTENV);
 
 		final File exportedFile = notionClient.export()
 				.orElseThrow(() -> new IllegalStateException("Could not export notion file"));
@@ -111,7 +111,7 @@ public class NotionBackup {
 
 		CompletableFuture.allOf(futureGoogleDrive, futureDropbox, futureNextcloud, futurePCloud).join();
 
-		new BackupRetentionManager(dotenv, notionClient.getDownloadsDirectoryPath()).applyRetentionPolicy();
+		new BackupRetentionManager(DOTENV, notionClient.getDownloadsDirectoryPath()).applyRetentionPolicy();
 
 		if (hasErrorOccurred.get()) {
 			log.error("Not all backups were completed successfully. See the logs above to get more information about the errors.");
@@ -130,13 +130,13 @@ public class NotionBackup {
 			log.warn("Skipping Google Drive upload. Could not create Google Drive service.");
 			return;
 		}
-		String googleDriveRootFolderId = dotenv.get(KEY_GOOGLE_DRIVE_ROOT_FOLDER_ID);
+		String googleDriveRootFolderId = DOTENV.get(KEY_GOOGLE_DRIVE_ROOT_FOLDER_ID);
 		if (StringUtils.isBlank(googleDriveRootFolderId)) {
 			log.info("Skipping Google Drive upload. {} is blank.", KEY_GOOGLE_DRIVE_ROOT_FOLDER_ID);
 			return;
 		}
-		GoogleDriveClient GoogleDriveClient = new GoogleDriveClient(googleServiceOptional.get(), googleDriveRootFolderId);
-		boolean isSuccess = GoogleDriveClient.upload(fileToUpload);
+		GoogleDriveClient googleDriveClient = new GoogleDriveClient(googleServiceOptional.get(), googleDriveRootFolderId);
+		boolean isSuccess = googleDriveClient.upload(fileToUpload);
 
 		if (!isSuccess) {
 			throw new IllegalStateException("Backup was not successful");
@@ -164,14 +164,14 @@ public class NotionBackup {
 	}
 
 	private static Optional<String> getDropboxAccessToken() {
-		String dropboxAccessToken = dotenv.get(KEY_DROPBOX_ACCESS_TOKEN);
+		String dropboxAccessToken = DOTENV.get(KEY_DROPBOX_ACCESS_TOKEN);
 
 		if (StringUtils.isBlank(dropboxAccessToken)) {
 			log.info("{} is blank. Trying to fetch an access token with the refresh token...", KEY_DROPBOX_ACCESS_TOKEN);
 
-			String dropboxAppKey = dotenv.get(KEY_DROPBOX_APP_KEY);
-			String dropboxAppSecret = dotenv.get(KEY_DROPBOX_APP_SECRET);
-			String dropboxRefreshToken = dotenv.get(KEY_DROPBOX_REFRESH_TOKEN);
+			String dropboxAppKey = DOTENV.get(KEY_DROPBOX_APP_KEY);
+			String dropboxAppSecret = DOTENV.get(KEY_DROPBOX_APP_SECRET);
+			String dropboxRefreshToken = DOTENV.get(KEY_DROPBOX_REFRESH_TOKEN);
 			if (StringUtils.isAnyBlank(dropboxAppKey, dropboxAppSecret, dropboxRefreshToken)) {
 				log.info("Failed to fetch an access token. Either {}, {} or {} is blank.", KEY_DROPBOX_REFRESH_TOKEN, KEY_DROPBOX_APP_KEY, KEY_DROPBOX_APP_SECRET);
 				return Optional.empty();
@@ -194,9 +194,9 @@ public class NotionBackup {
 	}
 
 	public static void startNextcloudBackup(File fileToUpload) {
-		String email = dotenv.get(KEY_NEXTCLOUD_EMAIL);
-		String password = dotenv.get(KEY_NEXTCLOUD_PASSWORD);
-		String webdavUrl = dotenv.get(KEY_NEXTCLOUD_WEBDAV_URL);
+		String email = DOTENV.get(KEY_NEXTCLOUD_EMAIL);
+		String password = DOTENV.get(KEY_NEXTCLOUD_PASSWORD);
+		String webdavUrl = DOTENV.get(KEY_NEXTCLOUD_WEBDAV_URL);
 
 		if (StringUtils.isAnyBlank(email, password, webdavUrl)) {
 			log.info("Skipping Nextcloud upload. {}, {} or {} is blank.", KEY_NEXTCLOUD_EMAIL, KEY_NEXTCLOUD_PASSWORD, KEY_NEXTCLOUD_WEBDAV_URL);
@@ -211,8 +211,8 @@ public class NotionBackup {
 	}
 
 	public static void startPCloudBackup(File fileToUpload) {
-		String pCloudAccessToken = dotenv.get(KEY_PCLOUD_ACCESS_TOKEN);
-		String pCloudApiHost = dotenv.get(KEY_PCLOUD_API_HOST);
+		String pCloudAccessToken = DOTENV.get(KEY_PCLOUD_ACCESS_TOKEN);
+		String pCloudApiHost = DOTENV.get(KEY_PCLOUD_API_HOST);
 
 		if (StringUtils.isAnyBlank(pCloudAccessToken, pCloudApiHost)) {
 			log.info("Skipping pCloud upload. {} or {} is blank.", KEY_PCLOUD_ACCESS_TOKEN, KEY_PCLOUD_API_HOST);
@@ -225,7 +225,7 @@ public class NotionBackup {
 			return;
 		}
 
-		String pCloudFolderIdString = dotenv.get(KEY_PCLOUD_FOLDER_ID);
+		String pCloudFolderIdString = DOTENV.get(KEY_PCLOUD_FOLDER_ID);
 		long pCloudFolderId = RemoteFolder.ROOT_FOLDER_ID;
 		if (StringUtils.isNotBlank(pCloudFolderIdString)) {
 			try {
@@ -244,8 +244,8 @@ public class NotionBackup {
 	}
 
 	private static Optional<String> extractGoogleServiceAccountSecret() {
-		String serviceAccountSecret = dotenv.get(KEY_GOOGLE_DRIVE_SERVICE_ACCOUNT_SECRET_JSON);
-		String serviceAccountSecretFilePath = dotenv.get(KEY_GOOGLE_DRIVE_SERVICE_ACCOUNT_SECRET_FILE_PATH);
+		String serviceAccountSecret = DOTENV.get(KEY_GOOGLE_DRIVE_SERVICE_ACCOUNT_SECRET_JSON);
+		String serviceAccountSecretFilePath = DOTENV.get(KEY_GOOGLE_DRIVE_SERVICE_ACCOUNT_SECRET_FILE_PATH);
 
 		// Use the secret value if provided.
 		if (StringUtils.isNotBlank(serviceAccountSecret)) {
