@@ -1,6 +1,7 @@
 # Schedulable notion backups
 
 ![example workflow name](https://github.com/AsierZunzu/schedulable-notion-backup/actions/workflows/docker-publish.yml/badge.svg?branch=main)
+![Lint](https://github.com/AsierZunzu/schedulable-notion-backup/actions/workflows/lint.yml/badge.svg)
 
 This project extends the [jckleiner/notion-backup](https://github.com/jckleiner/notion-backup) project by patching a couple of bugs and incorporating a scheduler to the Docker image so that the backups can be scheduled. This is achieved using a _cron_ which scheduling is based on an `.env` value.
 An updated `.env.dist` file is provided with the original project's variables (see [README -> Set Credentials](https://github.com/jckleiner/notion-backup?tab=readme-ov-file#set-credentials)) plus a couple of custom more. A `compose.yaml` is included too, to ease up the configuration of the container.
@@ -30,6 +31,23 @@ Example outcome with daily backups after one year (default values):
 - **~4, 5, 6 days ago** — oldest 3 from the last week window
 - **~22–29 days ago** — oldest 8 from the last month window
 - **~353–364 days ago** — oldest 12 from the last year window
+
+## Code style
+
+This project uses [Checkstyle](https://checkstyle.org/) to enforce a consistent code style. The rules are defined in [`checkstyle.xml`](checkstyle.xml) and cover:
+
+- No wildcard or unused imports
+- Standard Java naming conventions (types, constants, methods, variables)
+- All control structures must use braces
+- No empty `catch` blocks (unless the variable is named `expected` or `ignore`)
+- One statement per line
+- Miscellaneous best-practice rules (`StringLiteralEquality`, `SimplifyBooleanReturn`, `FallThrough`, …)
+
+Checkstyle runs automatically on every push and pull request via the **Lint** GitHub Actions workflow. It also runs locally as part of the Maven build during the `validate` phase, so any violation will fail `mvn install` too:
+
+```bash
+mvn checkstyle:check
+```
 
 ## Run the service
 Just start the service with docker compose and you are good to go:
