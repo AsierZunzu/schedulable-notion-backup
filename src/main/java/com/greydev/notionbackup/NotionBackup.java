@@ -111,6 +111,8 @@ public class NotionBackup {
 
 		CompletableFuture.allOf(futureGoogleDrive, futureDropbox, futureNextcloud, futurePCloud).join();
 
+		new BackupRetentionManager(dotenv, notionClient.getDownloadsDirectoryPath()).applyRetentionPolicy();
+
 		if (hasErrorOccurred.get()) {
 			log.error("Not all backups were completed successfully. See the logs above to get more information about the errors.");
 			System.exit(1);

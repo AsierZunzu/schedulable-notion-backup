@@ -104,6 +104,10 @@ public class NotionClient {
 		}
 	}
 
+	public String getDownloadsDirectoryPath() {
+		return downloadsDirectoryPath;
+	}
+
 	public Optional<File> export() {
 		try {
 			long exportTriggerTimestamp = System.currentTimeMillis();

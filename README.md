@@ -10,6 +10,27 @@ Follow the instructions at [README -> Set Credentials](https://github.com/jcklei
 * `BACKUP_PATH` to set where do you want your backup files to be stored
 * `SCHEDULING_CONFIG` to set the scheduling interval. Check out [this link](https://en.wikipedia.org/wiki/Cron) for more information on the format
 
+## Backup retention
+
+After each backup is created, a retention policy is applied to the local backup directory to automatically delete old files. Each rule operates on a **non-overlapping time window** and preserves the **oldest** available backups within that window, maximising temporal coverage.
+
+| Environment variable | Default | Description |
+|---|---|---|
+| `RETENTION_KEEP_LAST` | `5` | Always keep the N most recent backups, regardless of age |
+| `RETENTION_KEEP_LAST_DAY` | `1` | Keep the N oldest backups from the last 24 hours |
+| `RETENTION_KEEP_LAST_WEEK` | `3` | Keep the N oldest backups from the 1–7 day range |
+| `RETENTION_KEEP_LAST_MONTH` | `8` | Keep the N oldest backups from the 7–30 day range |
+| `RETENTION_KEEP_LAST_YEAR` | `12` | Keep the N oldest backups from the 30–365 day range |
+
+A file is deleted only if it is not selected by any rule. Set a variable to `0` to disable that rule.
+
+Example outcome with daily backups after one year (default values):
+- **Most recent 5** — unconditional, always available
+- **~23 h ago** — oldest from the last day window
+- **~4, 5, 6 days ago** — oldest 3 from the last week window
+- **~22–29 days ago** — oldest 8 from the last month window
+- **~353–364 days ago** — oldest 12 from the last year window
+
 ## Run the service
 Just start the service with docker compose and you are good to go:
 ```
