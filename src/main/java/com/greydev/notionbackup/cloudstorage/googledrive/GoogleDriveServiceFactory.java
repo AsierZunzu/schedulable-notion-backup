@@ -7,7 +7,7 @@ import java.util.Collections;
 import java.util.Optional;
 
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
-import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.drive.Drive;
 import com.google.auth.http.HttpCredentialsAdapter;
 import com.google.auth.oauth2.GoogleCredentials;
@@ -37,7 +37,7 @@ public class GoogleDriveServiceFactory {
 					.fromStream(new ByteArrayInputStream(googleDriveServiceAccountSecret.getBytes()))
 					.createScoped(Collections.singletonList(OAUTH_SCOPE_GOOGLE_DRIVE));
 			drive = new Drive
-					.Builder(GoogleNetHttpTransport.newTrustedTransport(), JacksonFactory.getDefaultInstance(), new HttpCredentialsAdapter(googleCredentials))
+					.Builder(GoogleNetHttpTransport.newTrustedTransport(), GsonFactory.getDefaultInstance(), new HttpCredentialsAdapter(googleCredentials))
 					.setApplicationName(APPLICATION_NAME)
 					.build();
 		} catch (IOException | GeneralSecurityException e) {
