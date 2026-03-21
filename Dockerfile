@@ -1,6 +1,7 @@
 FROM maven:3.9.14-eclipse-temurin-25 AS build
 
 COPY ./pom.xml /usr/src/mymaven/pom.xml
+COPY ./checkstyle.xml /usr/src/mymaven/checkstyle.xml
 COPY ./src /usr/src/mymaven/src
 WORKDIR /usr/src/mymaven
 
