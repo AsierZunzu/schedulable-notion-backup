@@ -1,4 +1,4 @@
-FROM maven:3.9.14-eclipse-temurin-11 AS build
+FROM maven:3.9.14-eclipse-temurin-21 AS build
 
 COPY ./pom.xml /usr/src/mymaven/pom.xml
 COPY ./src /usr/src/mymaven/src
@@ -6,7 +6,7 @@ WORKDIR /usr/src/mymaven
 
 RUN mvn clean install
 
-FROM eclipse-temurin:11-jdk
+FROM eclipse-temurin:21-jdk
 
 WORKDIR /
 
