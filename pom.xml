@@ -18,32 +18,6 @@
 
 	<dependencies>
 
-		<!-- GOOGLE -->
-		<dependency>
-			<groupId>com.google.api-client</groupId>
-			<artifactId>google-api-client</artifactId>
-			<version>2.9.0</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.google.oauth-client</groupId>
-			<artifactId>google-oauth-client-jetty</artifactId>
-			<version>1.39.0</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.google.apis</groupId>
-			<artifactId>google-api-services-drive</artifactId>
-			<version>v3-rev20250511-2.0.0</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.google.auth</groupId>
-			<artifactId>google-auth-library-oauth2-http</artifactId>
-			<version>1.43.0</version>
-		</dependency>
-		<!-- /GOOGLE -->
-
 		<!-- JACKSON -->
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
@@ -86,20 +60,6 @@
 			<version>1.5.18</version>
 		</dependency>
 
-
-		<!-- DROPBOX API-->
-		<dependency>
-			<groupId>com.dropbox.core</groupId>
-			<artifactId>dropbox-core-sdk</artifactId>
-			<version>7.0.0</version>
-		</dependency>
-
-		<!-- PCLOUD API -->
-		<dependency>
-			<groupId>com.pcloud.sdk</groupId>
-			<artifactId>java-core</artifactId>
-			<version>1.10.0</version>
-		</dependency>
 
 		<!-- LOMBOK -->
 		<dependency>

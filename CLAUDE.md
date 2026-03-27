@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-A Dockerized Java application that exports Notion workspaces on a cron schedule and uploads them to cloud storage (Google Drive, Dropbox, Nextcloud, pCloud). It is an enhanced fork of [jckleiner/notion-backup](https://github.com/jckleiner/notion-backup).
+A Dockerized Java application that exports Notion workspaces on a cron schedule and saves them locally. It is an enhanced fork of [jckleiner/notion-backup](https://github.com/jckleiner/notion-backup).
 
 ## Commands
 
@@ -31,10 +31,10 @@ docker compose -f compose.yaml up -d
 mvn test
 
 # Run a single test class
-mvn test -Dtest=DropboxClientTest
+mvn test -Dtest=NotionClientTest
 
 # Run a single test method
-mvn test -Dtest=DropboxClientTest#uploadSuccess
+mvn test -Dtest=BackupRetentionManagerTest#someMethod
 ```
 
 ### Docker
@@ -53,19 +53,8 @@ docker build --no-cache -t notion-backup .
 
 1. **Container startup** (`entrypoint.sh`): Dumps env vars to `/etc/environment` for cron access, validates `SCHEDULING_CONFIG` cron syntax, writes cron job to `/etc/cron.d/notion-backup`, starts cron daemon.
 2. **Cron fires** → runs `java -jar /notion-backup.jar`
-3. **`NotionBackup.java`** (main class): Triggers Notion export, downloads the ZIP, then uploads in parallel via `CompletableFuture` to all configured cloud providers. Exits with code `1` if any upload fails.
+3. **`NotionBackup.java`** (main class): Triggers Notion export, downloads the ZIP, then applies the retention policy.
 4. **`NotionClient.java`**: POSTs to Notion API to enqueue export task, polls up to 500 times (5s intervals) for the download URL, then downloads the ZIP.
-
-### Cloud Storage
-
-Each provider implements `CloudStorageClient` (single `upload(File)` method). Providers are skipped silently if their required env vars are absent.
-
-- `GoogleDriveClient` — Uses service account JSON (inline or file path)
-- `DropboxClient` — Supports both access token and OAuth refresh token flow
-- `NextcloudClient` — WebDAV protocol with email/password auth
-- `PCloudClient` — pCloud SDK with folder ID targeting
-
-Service factories (`GoogleDriveServiceFactory`, `DropboxServiceFactory`, `PCloudApiClientFactory`) handle SDK client initialization separately from upload logic.
 
 ### Key Configuration (`.env`)
 
