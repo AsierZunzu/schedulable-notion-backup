@@ -75,4 +75,4 @@ Copy `.env.dist` to `.env` to get started.
 
 ### CI/CD
 
-`.github/workflows/docker-publish.yml` publishes to `ghcr.io/asierzunzu/schedulable-notion-backup` on pushes to `main` and version tags (`v*.*.*`). Uses cosign for image signing and multi-platform builds.
+`.github/workflows/docker-publish.yml` publishes to `ghcr.io/asierzunzu/notionkeeper` on pushes to `main` and version tags (`v*.*.*`). Uses cosign for image signing and multi-platform builds.

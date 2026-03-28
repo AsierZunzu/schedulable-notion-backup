@@ -1,7 +1,7 @@
 name: notion-keeper
 services:
   notion-keeper:
-    image: ghcr.io/asierzunzu/schedulable-notion-backup:main
+    image: ghcr.io/asierzunzu/notionkeeper:main
     container_name: notion-keeper
     volumes:
       - ${BACKUP_PATH}:/${DOWNLOADS_DIRECTORY_PATH}

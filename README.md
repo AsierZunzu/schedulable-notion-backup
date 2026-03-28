@@ -1,6 +1,6 @@
 # NotionKeeper
 
-![CI](https://github.com/AsierZunzu/schedulable-notion-backup/actions/workflows/ci.yml/badge.svg?branch=main)
+![CI](https://github.com/AsierZunzu/notionkeeper/actions/workflows/ci.yml/badge.svg?branch=main)
 
 This project extends the [jckleiner/notion-backup](https://github.com/jckleiner/notion-backup) project by patching a couple of bugs and incorporating a scheduler to the Docker image so that the backups can be scheduled. This is achieved using a _cron_ which scheduling is based on an `.env` value.
 An updated `.env.dist` file is provided with the original project's variables (see [README -> Set Credentials](https://github.com/jckleiner/notion-backup?tab=readme-ov-file#set-credentials)) plus a couple of custom more. A `compose.yaml` is included too, to ease up the configuration of the container.
