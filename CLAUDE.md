@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-A Dockerized Java application that exports Notion workspaces on a cron schedule and saves them locally. It is an enhanced fork of [jckleiner/notion-backup](https://github.com/jckleiner/notion-backup).
+**NotionKeeper** — a Dockerized Java application that exports Notion workspaces on a cron schedule and saves them locally. It is an enhanced fork of [jckleiner/notion-backup](https://github.com/jckleiner/notion-backup).
 
 ## Commands
 

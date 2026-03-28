@@ -1,4 +1,4 @@
-# Schedulable notion backups
+# NotionKeeper
 
 ![CI](https://github.com/AsierZunzu/schedulable-notion-backup/actions/workflows/ci.yml/badge.svg?branch=main)
 

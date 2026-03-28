@@ -7,7 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 
 
 @Slf4j
-public class NotionBackup {
+public class NotionKeeper {
 
 	private static final Dotenv DOTENV;
 
@@ -16,7 +16,7 @@ public class NotionBackup {
 	}
 
 	public static void main(String[] args) {
-		log.info("---------------- Starting Notion Backup ----------------");
+		log.info("---------------- Starting NotionKeeper ----------------");
 
 		NotionClient notionClient = new NotionClient(DOTENV);
 
